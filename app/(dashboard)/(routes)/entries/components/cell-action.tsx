@@ -9,7 +9,7 @@ import {
   View, 
 } from "lucide-react";
 import toast from "react-hot-toast";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react"; 
 
 

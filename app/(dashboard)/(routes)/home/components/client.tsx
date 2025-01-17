@@ -1,11 +1,8 @@
 "use client";
 
-import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
 import Image from 'next/image';
 
 import { Heading } from "@/components/ui/heading";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { DataTable } from "@/components/ui/data-table"
 
@@ -21,7 +18,6 @@ interface HomeClientProps {
 export const HomeClient : React.FC<HomeClientProps> = ({
   data
 }) =>{
-  const router = useRouter();
   const { user } = useUser()
 
   return (

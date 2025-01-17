@@ -11,13 +11,6 @@ import { toast } from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 
 
-import { 
-  Select, 
-  SelectTrigger, 
-  SelectValue, 
-  SelectContent, 
-  SelectItem
-} from "@/components/ui/select";
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -29,7 +22,6 @@ import {
   FormControl,
   FormMessage
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea";
 import { AlertModal } from "@/components/modals/alert-modal";
 

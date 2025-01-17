@@ -69,7 +69,6 @@ export async function POST(req: Request) {
 }
 
 export async function GET(
-    _req: Request,
   ) {
     try{
       const { userId }: { userId: string | null } = await auth();
