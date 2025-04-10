@@ -6,7 +6,6 @@ import {
   Edit,
   Trash, 
   MoreHorizontal,
-  View, 
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -23,10 +22,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { AlertModal } from "@/components/modals/alert-modal";
 
-import { ArticleColumn } from "./columns"
+import { TagColumn } from "./columns"
 
 interface CellActionProps {
-  data: ArticleColumn;
+  data: TagColumn;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({
@@ -39,17 +38,17 @@ export const CellAction: React.FC<CellActionProps> = ({
 
   const onCopy = (id: string) => {
     navigator.clipboard.writeText(id)
-    toast.success("Article Id copied to the clipboard.")
+    toast.success("Tag Id copied to the clipboard.")
   }
 
   const onDelete = async () => {
     try {
       setLoading(true)
-      await axios.delete(`/api/articles/${data.id}`);
-      toast.success("Article deleted.")
+      await axios.delete(`/api/tags/${data.id}`);
+      toast.success("Tag deleted.")
       router.refresh();
     } catch (error) {
-      toast.error("Something went wrong while deleting the article.");
+      toast.error("Something went wrong while deleting the Tag.");
     } finally {
       setLoading(false)
       setOpen(false)
@@ -82,11 +81,7 @@ export const CellAction: React.FC<CellActionProps> = ({
             <Copy className="mr-2 h-4 w-4"/>
             Copy Id
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push(`/articles/${data.id}/view`)}>
-            <View className="mr-2 h-4 w-4"/>
-            View
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push(`/articles/${data.id}`)}>
+          <DropdownMenuItem onClick={() => router.push(`/tags/${data.id}`)}>
             <Edit className="mr-2 h-4 w-4"/>
             Update
           </DropdownMenuItem>

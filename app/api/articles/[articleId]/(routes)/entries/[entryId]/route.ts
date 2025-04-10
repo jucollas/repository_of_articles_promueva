@@ -37,15 +37,13 @@ export async function PATCH (
 ) {
   try {
     const { userId }: { userId: string | null } = await auth();
-    const body = await req.json()
+    const body = await req.json();
 
     if(!userId){
       return new NextResponse("Unauthorized", { status : 401 });
     }
 
-    const { 
-      content,
-    } = body;
+    const { content, archived, tags } = body;
 
     if (!content) {
       return new NextResponse("Content is required", { status: 400 });
@@ -58,14 +56,14 @@ export async function PATCH (
       },
     });
 
-    if (!user) {
+    if (!userdb) {
       return new NextResponse("User not found", { status: 404 });
     }
 
-    const authorId = userdb?.id;
+    const authorId = userdb.id;
 
     if(!params.entryId) {
-      return new NextResponse("Entry id is requierd", { status : 400 });
+      return new NextResponse("Entry id is required", { status : 400 });
     }
 
     const entryByUserId = await prismadb.entry.findFirst({
@@ -73,14 +71,14 @@ export async function PATCH (
         id: params.entryId,
         authorId
       }
-    })
+    });
 
     if(!entryByUserId){
-        return new NextResponse("Unauthorized", {status: 403})
+      return new NextResponse("Unauthorized", {status: 403});
     }
 
     if(!params.articleId) {
-      return new NextResponse("Article id is requierd", { status : 400 });
+      return new NextResponse("Article id is required", { status : 400 });
     }
 
     const entryByArticle = await prismadb.entry.findFirst({
@@ -88,27 +86,50 @@ export async function PATCH (
         id: params.entryId,
         articleId: params.articleId
       }
-    })
+    });
 
     if(!entryByArticle){
-      return new NextResponse("This entry does not belong to this article", {status: 400})
+      return new NextResponse("This entry does not belong to this article", {status: 400});
     }
 
-    const entry = await prismadb.entry.updateMany({
+    // 1. Eliminar relaciones anteriores en EntryTag
+    await prismadb.entryTag.deleteMany({
       where: {
-        id: params.entryId,
-      },
-      data : {
-        content
+        entryId: params.entryId,
       }
-    })
+    });
 
-    return NextResponse.json(entry);
+    // 2. Crear nuevas relaciones EntryTag
+    const updatedEntry = await prismadb.entry.update({
+      where: { id: params.entryId },
+      data: {
+        content,
+        archived,
+        tags: {
+          create: tags.map((tagId: string) => ({
+            tag: {
+              connect: { id: tagId }
+            }
+          }))
+        }
+      },
+      include: {
+        tags: {
+          include: { tag: true },
+        },
+      },
+    });
+
+    return NextResponse.json(updatedEntry);
+
   } catch (error) {
-    console.log('[ENTRY_PATCH]', error)
+    console.log('[ENTRY_PATCH]', error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }
+
+
+
 
 export async function DELETE (
   _req: Request,

@@ -26,6 +26,11 @@ export function MainNav ({
       label: `My entries`,
       active: pathname === `/entries`,
     },
+    {
+      href: `/tags`,
+      label: `My tags`,
+      active: pathname === `/tags`,
+    },
   ]
 
   return (

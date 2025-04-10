@@ -13,23 +13,22 @@ export async function POST(
       return new NextResponse("Unauthenticated", { status: 401 });
     }
 
-    const articleBy = prismadb.article.findUnique({
-      where:{
+    // Buscar artículo por ID con await
+    const articleBy = await prismadb.article.findUnique({
+      where: {
         id: params.articleId,
       }
-    })
+    });
 
-    if(!articleBy){
-      return new NextResponse("Article is requierd", {"status" : 400})
+    if (!articleBy) {
+      return new NextResponse("Article not found", { status: 400 });
     }
-    
-    const body = await req.json();
-    const { 
-      content,
-    } = body;
 
-    if(!content){
-      return new NextResponse("Content is requierd", {"status" : 400})
+    const body = await req.json();
+    const { content, archived, tags } = body;
+
+    if (!content) {
+      return new NextResponse("Content is required", { status: 400 });
     }
 
     const userInfo = await currentUser();
@@ -43,20 +42,36 @@ export async function POST(
       return new NextResponse("User not found", { status: 404 });
     }
 
+    // Crear entry y conectar tags existentes
     const entry = await prismadb.entry.create({
       data: {
         content,
-        author: {connect: {id: user.id}},
-        article: {connect: {id: params.articleId}} 
-      }
-    })
+        archived,
+        author: { connect: { id: user.id } },
+        article: { connect: { id: params.articleId } },
+        tags: {
+          create: tags.map((tagId: string) => ({
+            tag: {
+              connect: { id: tagId },
+            }
+          }))
+        }
+      },
+      include: {
+        tags: {
+          include: { tag: true },
+        },
+      },
+    });
 
     return NextResponse.json(entry);
+
   } catch (error) {
     console.error("[ENTRY_POST]", error);
     return new NextResponse("Internal server error", { status: 500 });
   }
 }
+
 
 /*export async function GET(
     _req: Request,

@@ -72,7 +72,6 @@ export async function GET(
   ) {
     try{
       const { userId }: { userId: string | null } = await auth();
-
       if (!userId) {
         return new NextResponse("Unauthenticated", { status: 401 });
       }
