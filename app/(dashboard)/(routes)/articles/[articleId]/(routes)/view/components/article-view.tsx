@@ -12,7 +12,7 @@ interface ArticleEntry {
   createdAt: Date;
   author : {
     name: string,
-    gmail: string
+    email: string
   }
 }
 
@@ -73,7 +73,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({ data }) => {
                 </h3>
                 <p className="text-gray-600">{entry.content}</p>
               </div>
-              <Button disabled={entry.author.gmail == user?.primaryEmailAddress?.emailAddress} onClick={() => router.push(`/articles/${params.articleId}/entries/${entry.id}`)}>
+              <Button disabled={entry.author.email == user?.primaryEmailAddress?.emailAddress} onClick={() => router.push(`/articles/${params.articleId}/entries/${entry.id}`)}>
                 Edit
               </Button>
 
