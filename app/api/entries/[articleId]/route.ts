@@ -71,23 +71,3 @@ export async function POST(
     return new NextResponse("Internal server error", { status: 500 });
   }
 }
-
-
-/*export async function GET(
-    _req: Request,
-  ) {
-    try{
-      const { userId }: { userId: string | null } = await auth();
-
-      if (!userId) {
-        return new NextResponse("Unauthenticated", { status: 401 });
-      }
-
-      const articles = await prismadb.article.findMany();
-      
-      return NextResponse.json(articles);
-    } catch (error) {
-      console.log('[ARTICLES_GET]', error);
-      return new NextResponse("Internal error", { status: 500 });
-    }
-  }*/

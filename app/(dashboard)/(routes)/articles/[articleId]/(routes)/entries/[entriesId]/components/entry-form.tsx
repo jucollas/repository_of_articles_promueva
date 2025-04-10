@@ -90,9 +90,9 @@ export const EntryForm: React.FC<EntryFormProps> = ({ initialData }) => {
       };
 
       if (initialData) {
-        await axios.patch(`/api/articles/${params.articleId}/entries/${params.entriesId}`, payload);
+        await axios.patch(`/api/entries/${params.articleId}/${params.entriesId}`, payload);
       } else {
-        await axios.post(`/api/articles/${params.articleId}/entries/`, payload);
+        await axios.post(`/api/entries/${params.articleId}`, payload);
       }
 
       router.push(`/articles/${params.articleId}/view`);
@@ -108,7 +108,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({ initialData }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/articles/${params.articleId}/entries/${params.entriesId}`);
+      await axios.delete(`/api/entries/${params.articleId}/${params.entriesId}`);
       router.push(`/articles/${params.articleId}/view`);
       toast.success("Entry deleted.");
       router.refresh();
